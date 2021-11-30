@@ -2,10 +2,15 @@ package com.ivson.cursomc;
 
 import com.ivson.cursomc.domain.Categoria;
 import com.ivson.cursomc.domain.Cidade;
+import com.ivson.cursomc.domain.Cliente;
+import com.ivson.cursomc.domain.Endereco;
 import com.ivson.cursomc.domain.Estado;
 import com.ivson.cursomc.domain.Produto;
+import com.ivson.cursomc.domain.enums.TipoCliente;
 import com.ivson.cursomc.repository.CategoriaRepository;
 import com.ivson.cursomc.repository.CidadeRepository;
+import com.ivson.cursomc.repository.ClienteRepository;
+import com.ivson.cursomc.repository.EnderecoRepository;
 import com.ivson.cursomc.repository.EstadoRepository;
 import com.ivson.cursomc.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +20,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Set;
 
 @SpringBootApplication
 public class CursomcApplication implements CommandLineRunner {
@@ -30,6 +37,12 @@ public class CursomcApplication implements CommandLineRunner {
 
 	@Autowired
 	private CidadeRepository cidadeRepository;
+
+	@Autowired
+	private ClienteRepository clienteRepository;
+
+	@Autowired
+	private EnderecoRepository enderecoRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -67,6 +80,20 @@ public class CursomcApplication implements CommandLineRunner {
 
 		estadoRepository.saveAll(Arrays.asList(est1, est2));
 		cidadeRepository.saveAll(Arrays.asList(c1, c2,c3));
+
+		Cliente cli1 = new Cliente(null, "Maria Silva","maria@gmail.com","363789122377", TipoCliente.PESSOAFISICA);
+		cli1.getTelefones().addAll(Arrays.asList("27363323", "9383"));
+
+		Endereco e1 = Endereco.builder().numero("300").logradouro("rua flores").complemento("apto 303").cep("38220834")
+				.bairro("jardim").cliente(cli1).cidade(c1).build();
+		Endereco e2 = Endereco.builder().numero("105").logradouro("Avenida Matos").complemento("sala 8").cep("38220834")
+				.bairro("jardim").cliente(cli1).cidade(c2).build();
+
+		cli1.getEnderecos().addAll(Arrays.asList(e1, e2));
+
+		clienteRepository.saveAll(Arrays.asList(cli1));
+		enderecoRepository.saveAll(Arrays.asList(e1, e2));
+
 
 	}
 
