@@ -2,8 +2,10 @@ package com.ivson.cursomc.service;
 
 import com.ivson.cursomc.domain.Categoria;
 import com.ivson.cursomc.repository.CategoriaRepository;
+import com.ivson.cursomc.service.exceptions.DataIntegritException;
 import com.ivson.cursomc.service.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -32,7 +34,11 @@ public class CategoriaService {
 
     public void delete(Integer id) {
         find(id);
-        repository.deleteById(id);
+        try {
+            repository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegritException("Nao pode excluir uma categoria");
+        }
     }
 
 }
