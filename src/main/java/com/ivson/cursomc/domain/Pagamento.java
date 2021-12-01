@@ -2,6 +2,7 @@ package com.ivson.cursomc.domain;
 
 import com.ivson.cursomc.domain.enums.EstadoPagamento;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,16 +22,24 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Pagamento implements Serializable {
 
     @Id
     private Integer id;
 
-    private EstadoPagamento estado;
+    private Integer estado;
 
     @OneToOne
     @JoinColumn(name = "pedido_id")
     @MapsId // mesmo ID do outro
     private Pedido pedido;
 
+    public EstadoPagamento getEstado() {
+        return EstadoPagamento.toEnum(estado);
+    }
+
+    public void setEstado(EstadoPagamento estado) {
+        this.estado = estado.getCod();
+    }
 }
