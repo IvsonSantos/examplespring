@@ -1,5 +1,6 @@
 package com.ivson.cursomc.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

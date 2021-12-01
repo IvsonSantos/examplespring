@@ -5,6 +5,7 @@ import com.ivson.cursomc.domain.Cidade;
 import com.ivson.cursomc.domain.Cliente;
 import com.ivson.cursomc.domain.Endereco;
 import com.ivson.cursomc.domain.Estado;
+import com.ivson.cursomc.domain.ItemPedido;
 import com.ivson.cursomc.domain.Pagamento;
 import com.ivson.cursomc.domain.PagamentoComBoleto;
 import com.ivson.cursomc.domain.PagamentoComCartao;
@@ -17,6 +18,7 @@ import com.ivson.cursomc.repository.CidadeRepository;
 import com.ivson.cursomc.repository.ClienteRepository;
 import com.ivson.cursomc.repository.EnderecoRepository;
 import com.ivson.cursomc.repository.EstadoRepository;
+import com.ivson.cursomc.repository.ItemPedidoRepository;
 import com.ivson.cursomc.repository.PagamentoRepository;
 import com.ivson.cursomc.repository.PedidoRepository;
 import com.ivson.cursomc.repository.ProdutoRepository;
@@ -29,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 @SpringBootApplication
@@ -58,6 +61,9 @@ public class CursomcApplication implements CommandLineRunner {
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
 
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
+
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
 	}
@@ -68,9 +74,9 @@ public class CursomcApplication implements CommandLineRunner {
 		Categoria cat1 = new Categoria(null, "Informatica", new ArrayList<>());
 		Categoria cat2 = new Categoria(null, "Escritório",  new ArrayList<>());
 
-		Produto p1 = Produto.builder().nome("Computador").preco(2000.00).categorias(new ArrayList<>()).build();
-		Produto p2 = Produto.builder().nome("Impressora").preco(800.00).categorias(new ArrayList<>()).build();
-		Produto p3 = Produto.builder().nome("Mouse").preco(80.00).categorias(new ArrayList<>()).build();
+		Produto p1 = Produto.builder().nome("Computador").preco(2000.00).categorias(new ArrayList<>()).itens(new HashSet<>()).build();
+		Produto p2 = Produto.builder().nome("Impressora").preco(800.00).categorias(new ArrayList<>()).itens(new HashSet<>()).build();
+		Produto p3 = Produto.builder().nome("Mouse").preco(80.00).categorias(new ArrayList<>()).itens(new HashSet<>()).build();
 
 		cat1.getProdutos().addAll(Arrays.asList(p1, p2, p3));
 		cat2.getProdutos().addAll(Arrays.asList(p2));
@@ -119,18 +125,31 @@ public class CursomcApplication implements CommandLineRunner {
 		pagto1.setEstado(EstadoPagamento.QUITADO);
 		pagto1.setPedido(ped1);
 		ped1.setPagamento(pagto1);
+		ped1.setItens(new HashSet<>());
 
 		Pagamento pagto2 = new PagamentoComBoleto(null, sdf.parse("20/10/2017 00:00"));
 		pagto2.setEstado(EstadoPagamento.PENDENTE);
 		pagto2.setPedido(ped2);
 		ped2.setPagamento(pagto2);
+		ped2.setItens(new HashSet<>());
 
 		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
 
 		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
 		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
 
+		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2000.00);
+		ItemPedido ip2 = new ItemPedido(ped1, p3, 0.00, 2, 80.00);
+		ItemPedido ip3 = new ItemPedido(ped2, p2, 100.00, 2, 80.00);
 
+		ped1.getItens().addAll(Arrays.asList(ip1, ip2));
+		ped2.getItens().addAll(Arrays.asList(ip3));
+
+		p1.getItens().addAll(Arrays.asList(ip1));
+		p2.getItens().addAll(Arrays.asList(ip3));
+		p3.getItens().addAll(Arrays.asList(ip2));
+
+		itemPedidoRepository.saveAll(Arrays.asList(ip1, ip2, ip3));
 	}
 
 }
