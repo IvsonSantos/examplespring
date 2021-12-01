@@ -1,5 +1,6 @@
 package com.ivson.cursomc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ivson.cursomc.domain.enums.EstadoPagamento;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +31,7 @@ public class Pagamento implements Serializable {
 
     private Integer estado;
 
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "pedido_id")
     @MapsId // mesmo ID do outro
@@ -42,4 +44,5 @@ public class Pagamento implements Serializable {
     public void setEstado(EstadoPagamento estado) {
         this.estado = estado.getCod();
     }
+
 }

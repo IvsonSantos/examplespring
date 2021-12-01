@@ -1,5 +1,6 @@
 package com.ivson.cursomc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -17,6 +18,7 @@ import javax.persistence.Entity;
 @EqualsAndHashCode
 public class ItemPedido {
 
+    @JsonIgnore
     @EmbeddedId
     private ItemPedidoPK id = new ItemPedidoPK();
 
@@ -34,10 +36,12 @@ public class ItemPedido {
         this.preco = preco;
     }
 
+    @JsonIgnore
     public Pedido getPedido() {
         return this.id.getPedido();
     }
 
+    @JsonIgnore
     public Produto getProduto() {
         return this.id.getProduto();
     }
