@@ -20,4 +20,9 @@ public class CategoriaService {
                 "Objeto nao encontrado, id: " + id + ", Tipo: " + Categoria.class.getName()));
     }
 
+    public Categoria insert(Categoria obj) {
+        obj.setId(null);
+        return repository.save(obj);
+    }
+
 }
